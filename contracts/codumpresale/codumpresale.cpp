@@ -190,7 +190,7 @@ void codumpresale::deletetx(const uint64_t id)
   eosio_assert(itr != contribution_table.end(), "there is no contribution with this id");
   eosio_assert(itr->validated > 0, "cannot delete validated contribution");
   contribution_table.erase(itr);
-  eosio_assert(itr != contribution_table.end(), "contribution not deleted properly");  
+  eosio_assert(itr != contribution_table.end(), "contribution not deleted properly");
 }
 
 void codumpresale::distribute_sale_tokens_by_tx(const uint64_t id)
@@ -271,8 +271,12 @@ void codumpresale::refundsale(uint64_t id, string refund_tx)
           tokencontract, N(transfer),
           std::make_tuple(N(codumpresale), r->contributor, r->refund, r->memo))
           .send();
+    }
+    if (refund_tx != "")
+    {
       contribution_table.modify(r, _self, [&](auto &val) {
         val.refunded = now();
+        val.refund_tx = refund_tx;
       });
     }
   }
