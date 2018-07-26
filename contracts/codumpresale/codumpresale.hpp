@@ -9,8 +9,6 @@
 using std::string;
 using namespace eosio;
 
-const account_name tokencontract = N(codumtestnet);
-
 class codumpresale : public contract
 {
 public:
@@ -32,10 +30,13 @@ public:
   void validate(const uint64_t id, const string &memo, const string &transaction);
 
   /// @abi action
+  void deletetx(const uint64_t id);
+
+  /// @abi action
   void distribute();
 
   /// @abi action
-  void refundsale(uint64_t id, string refund_tx);
+  void refundsale(uint64_t id, string refund_tx = "");
 
   inline int64_t get_bonus_state(const uint8_t stage) const;
   inline int64_t get_sale_state(const asset &cap) const;
@@ -53,6 +54,8 @@ public:
 
   const uint8_t bonus[2] = {50, 25};
   const asset bonus_thr[2] = {asset(19200000000, S(4, CODUM)), asset(38400000000, S(4, CODUM))};
+
+  const account_name tokencontract = N(codumreserve);
 
 private:
   void distribute_sale_tokens_by_tx(const uint64_t id);
